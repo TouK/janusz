@@ -15,9 +15,10 @@ import java.util.List;
 
 public class StackOverflowCommand implements JanuszCommand {
 
-    public static final String HELP_MESSAGE = "StackOverflow rocks! Ask any question, lets check the answer!\nWrite:\n`stack question";
     public static final String STACK_API_PATH = "https://api.stackexchange.com/2.2/search/advanced";
-    public static final String ERROR_MESSAGE = "Something gone wrong :(";
+
+    public static final String HELP_MESSAGE = "StackOverflow rocks! Zadaj pytanie, a ja Ci odpowiem!\nNapisz:\n`stack tu leci pytanie;)";
+    public static final String ERROR_MESSAGE = "Daj mi spokój, nie znasz wujka googla? http://www.google.pl";
 
     Logger log = LoggerFactory.getLogger(StackOverflowCommand.class);
 
