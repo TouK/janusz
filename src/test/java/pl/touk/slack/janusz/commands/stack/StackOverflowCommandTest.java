@@ -1,4 +1,4 @@
-package pl.touk.slack.janusz.commands;
+package pl.touk.slack.janusz.commands.stack;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;

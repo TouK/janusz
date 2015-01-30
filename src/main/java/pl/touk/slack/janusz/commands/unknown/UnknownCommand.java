@@ -7,6 +7,6 @@ import java.util.List;
 public class UnknownCommand implements JanuszCommand {
     @Override
     public String invoke(List<String> words) {
-        return "Unknown command";
+        return "Nie znam się, zarobiony jestem";
     }
 }

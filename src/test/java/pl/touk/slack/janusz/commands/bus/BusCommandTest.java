@@ -12,7 +12,9 @@ public class BusCommandTest {
 
     @Test
     public void shouldSearchRoutes() {
-        assertThat(command.invoke(ImmutableList.of("mokotowska 1, warszawa", "abrahama 18, warszawa"))).isNotEmpty();
+        String output = command.invoke(ImmutableList.of("mokotowska 1, warszawa", "abrahama 18, warszawa"));
+        System.out.println(output);
+        assertThat(output).isNotEmpty();
     }
 
 }
