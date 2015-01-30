@@ -18,11 +18,11 @@ public class BusCommand implements JanuszCommand {
         try {
             List<Route> directions = transitApi.getDirections(args.get(0), args.get(1));
             return directions.stream().map(route ->
-                    "busiki: " + route.getSteps().stream()
-                                    .map(step -> step.getLine() + " (" + step.getDeparture() + ")")
+                    route.getSteps().stream()
+                                    .map(step -> step.getLine() + " (" + step.getStop() + " o " + step.getDeparture() + ")")
                                     .collect(Collectors.joining(" -> "))
-                    + ", czas: " + route.getDuration()
-            ).collect(Collectors.joining(","));
+                    + " czas: " + route.getDuration()
+            ).collect(Collectors.joining("\n"));
         } catch (UnirestException e) {
             throw new JanuszException(e);
         }

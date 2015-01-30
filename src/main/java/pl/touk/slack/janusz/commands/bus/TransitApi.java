@@ -23,18 +23,23 @@ public class TransitApi {
                 .queryString("destination", to)
                 .queryString("departure_time", Clock.systemUTC().millis() / 1000)
                 .queryString("mode", "transit")
+                .queryString("alternatives", "true")
                 .asJson();
 
-        List<JSONObject> legs = toList(response.getBody().getObject().getJSONArray("routes").getJSONObject(0).getJSONArray("legs"));
-        return legs.stream().map(leg -> {
+        List<JSONObject> routes = toList(response.getBody().getObject().getJSONArray("routes"));
+        return routes.stream().map(route -> {
+                    JSONObject leg = route.getJSONArray("legs").getJSONObject(0);
                     List<JSONObject> stepsJson = toList(leg.getJSONArray("steps"));
                     List<Step> steps =
                             stepsJson.stream()
                                     .filter(step -> "TRANSIT".equals(step.getString("travel_mode")))
-                                    .map(stepJson -> new Step(
-                                            stepJson.getJSONObject("transit_details").getJSONObject("line").getString("short_name"),
-                                            stepJson.getJSONObject("transit_details").getJSONObject("departure_time").getString("text")))
-                                    .collect(Collectors.toList());
+                                    .map(stepJson -> {
+                                        JSONObject transitDetails = stepJson.getJSONObject("transit_details");
+                                        return new Step(
+                                                transitDetails.getJSONObject("line").getString("short_name"),
+                                                transitDetails.getJSONObject("departure_stop").getString("name"),
+                                                transitDetails.getJSONObject("departure_time").getString("text"));
+                                    }).collect(Collectors.toList());
                     return new Route(
                             leg.getJSONObject("departure_time").getString("text"),
                             leg.getJSONObject("arrival_time").getString("text"),
