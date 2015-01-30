@@ -40,7 +40,7 @@ public class GifCommand implements JanuszCommand {
                 return response;
             }
 
-            String url = jsonArray.getJSONObject(0).getJSONObject("images").getJSONObject("fixed_width_still").getString("url");
+            String url = jsonArray.getJSONObject(0).getJSONObject("images").getJSONObject("fixed_width").getString("url");
 
             return String.format("gif %s %s", spaceJoiner.join(words), url);
         } catch (UnirestException e) {
