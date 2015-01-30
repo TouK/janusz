@@ -14,7 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StackOverflowCommand implements JanuszCommand {
-    public static final String HELP_MESSAGE = "StackOverflow rocks! Ask any question, lets check the answer!";
+
+    public static final String HELP_MESSAGE = "StackOverflow rocks! Ask any question, lets check the answer!\nWrite:\n`stack question";
+    public static final String STACK_API_PATH = "https://api.stackexchange.com/2.2/search/advanced";
+    public static final String ERROR_MESSAGE = "Something gone wrong :(";
 
     Logger log = LoggerFactory.getLogger(StackOverflowCommand.class);
 
@@ -22,18 +25,23 @@ public class StackOverflowCommand implements JanuszCommand {
     public String invoke(String[] words) {
         String question = buildQuestion(words);
 
-        if (question == null || "".equals(question)) {
+        if (isQuestionEmpty(question)) {
             return HELP_MESSAGE;
         }
 
-        String answer = "no answer";
         try {
-            answer = askStackOverflow(question);
+            return askStackOverflow(question);
         } catch (Exception e) {
-            return "Wrong answer:(";
+            log.error(e.getMessage());
         }
 
-        return answer;
+        return ERROR_MESSAGE;
+
+
+    }
+
+    private boolean isQuestionEmpty(String question) {
+        return question == null || "".equals(question);
     }
 
     private String buildQuestion(String[] words) {
@@ -43,21 +51,28 @@ public class StackOverflowCommand implements JanuszCommand {
     }
 
     private String askStackOverflow(String question) throws UnirestException {
-        HttpRequest request = Unirest.get("https://api.stackexchange.com/2.2/search/advanced")
-                .queryString("q", question)
-                .queryString("site", "stackoverflow");
-
         try {
-            log.info("Asking for {}", question);
-            HttpResponse<JsonNode> stackResponse = request.asJson();
-            JSONObject jsonLink = stackResponse.getBody().getObject().getJSONArray("items").getJSONObject(1);
-            String response = jsonLink.getString("link").toString();
-            log.info("Got answer {}", response);
-            return response;
+            return retriveFromStack(question);
         } catch (UnirestException e) {
             log.error("Ups something gone wrong {}", e.getMessage());
             e.printStackTrace();
             throw e;
         }
+    }
+
+    private String retriveFromStack(String question) throws UnirestException {
+        HttpRequest request = Unirest.get(STACK_API_PATH)
+                .queryString("q", question)
+                .queryString("site", "stackoverflow");
+
+        log.info("Asking for {}", question);
+        HttpResponse<JsonNode> stackResponse = request.asJson();
+        log.info("Stack response: {}", stackResponse.getBody().toString());
+
+        JSONObject jsonLink = stackResponse.getBody().getObject().getJSONArray("items").getJSONObject(1);
+        String response = jsonLink.getString("link").toString();
+        log.info("Got answer {}", response);
+
+        return response;
     }
 }
