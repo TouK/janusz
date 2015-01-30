@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+group = 'pl.touk.slack'
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+    compile 'org.slf4j:slf4j-simple:1.7.7'
+    compile 'com.ullink.slack:simpleslackapi:0.2'
+    compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.8.3'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+
+    testCompile 'org.jmockit:jmockit:1.12'
+    testCompile 'org.assertj:assertj-core:1.7.0'
+    testCompile 'junit:junit:4.11'
+}
