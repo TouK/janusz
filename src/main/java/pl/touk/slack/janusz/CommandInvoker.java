@@ -1,14 +1,18 @@
 package pl.touk.slack.janusz;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import pl.touk.slack.janusz.commands.JanuszCommand;
 import pl.touk.slack.janusz.commands.unknown.UnknownCommand;
 
+import java.util.List;
 import java.util.Map;
 
 public class CommandInvoker {
 
-    private Map<String, JanuszCommand> commands;
-    private UnknownCommand unknownCommand = new UnknownCommand();
+    private final Map<String, JanuszCommand> commands;
+    private final UnknownCommand unknownCommand = new UnknownCommand();
 
     private static final String COMMAND_PREFIX = "`";
 
@@ -17,8 +21,17 @@ public class CommandInvoker {
     }
 
     public String invoke(String messageContent) {
-        String [] words = messageContent.split("\\s+");
-        return commands.getOrDefault(words[0], unknownCommand).invoke(words);
+        try {
+            String command = messageContent.substring(0, messageContent.indexOf(' '));
+            String args = messageContent.substring(messageContent.indexOf(' ') + 1);
+
+            CSVParser csvRecords = CSVParser.parse(args, CSVFormat.newFormat(' ').withQuote('"'));
+            List<String> commandArgs = Lists.newArrayList(csvRecords.iterator().next().iterator());
+
+            return commands.getOrDefault(command, unknownCommand).invoke(commandArgs);
+        } catch (Exception ex) {
+            throw new JanuszException(ex);
+        }
     }
 
     public boolean isCommandPrefix(String messageContent) {

@@ -1,5 +1,7 @@
 package pl.touk.slack.janusz;
 
+import com.truward.di.InjectionContext;
+import com.truward.di.support.DefaultInjectionContext;
 import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackSession;
@@ -7,25 +9,19 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import pl.touk.slack.janusz.commands.JanuszCommand;
 import pl.touk.slack.janusz.commands.StackOverflowCommand;
 import pl.touk.slack.janusz.commands.bus.BusCommand;
+import pl.touk.slack.janusz.commands.bus.TransitApi;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class JanuszStarter {
 
-    private SlackSession session;
+    private final SlackSession session;
 
-    private Map<String, JanuszCommand> commands = new HashMap<String, JanuszCommand>() {{
-        put("bus", new BusCommand());
-        put("stack", new StackOverflowCommand());
-    }};
-
-    private CommandInvoker commandInvoker = new CommandInvoker(commands);
+    private final CommandInvoker commandInvoker;
 
     public static void main(String [] args) throws InterruptedException {
-        JanuszStarter januszStarter = new JanuszStarter(
-            System.getProperty("apiToken", "xoxb-3564096395-Z1ZRglpJIIyIAFX6DNRqvb5o")
-        );
+        JanuszStarter januszStarter = new JanuszStarter(System.getProperty("apiToken"));
         januszStarter.startListening();
 
         while (true) {
@@ -35,6 +31,7 @@ public class JanuszStarter {
 
     public JanuszStarter(String apiToken) {
         session = SlackSessionFactory.createWebSocketSlackSession(apiToken);
+        commandInvoker = new CommandInvoker(createCommands(createContext()));
     }
 
     private void startListening() {
@@ -56,4 +53,19 @@ public class JanuszStarter {
         session.connect();
     }
 
+    public static InjectionContext createContext() {
+        InjectionContext context = new DefaultInjectionContext();
+        context.registerBean(new TransitApi());
+        context.registerBean(new BusCommand());
+        context.registerBean(new StackOverflowCommand());
+        context.freeze();
+        return context;
+    }
+
+    private Map<String, JanuszCommand> createCommands(InjectionContext context) {
+        return new HashMap<String, JanuszCommand>() {{
+            put("bus", context.getBean(BusCommand.class));
+            put("stack", context.getBean(StackOverflowCommand.class));
+        }};
+    }
 }

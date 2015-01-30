@@ -1,19 +1,19 @@
 package pl.touk.slack.janusz.commands.bus;
 
-import java.time.LocalDate;
+import java.util.List;
 
 public class Route {
 
     public final String start;
     public final String end;
     public final String duration;
-    public final String line;
+    public final List<Step> steps;
 
-    public Route(String start, String end, String duration, String line) {
+    public Route(String start, String end, String duration, List<Step> steps) {
         this.start = start;
         this.end = end;
         this.duration = duration;
-        this.line = line;
+        this.steps = steps;
     }
 
     public String getStart() {
@@ -28,7 +28,7 @@ public class Route {
         return duration;
     }
 
-    public String getLine() {
-        return line;
+    public List<Step> getSteps() {
+        return steps;
     }
 }

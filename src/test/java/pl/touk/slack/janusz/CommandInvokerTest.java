@@ -3,6 +3,7 @@ package pl.touk.slack.janusz;
 import org.junit.Test;
 import pl.touk.slack.janusz.commands.JanuszCommand;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,16 +12,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommandInvokerTest {
 
     private Map<String, JanuszCommand> commands = new HashMap<>(new HashMap<String, JanuszCommand>() {{
-        put("bus", words -> "invoked");
+        put("bus", words -> "invoked with " + words.size());
     }});
 
     private CommandInvoker commandInvoker = new CommandInvoker(commands);
 
     @Test
-    public void shouldInvokeProperCommand() {
-        String response = commandInvoker.invoke("bus mokotowska1 182");
-
-        assertThat(response).isEqualTo("invoked");
+    public void shouldInvokeProperCommand() throws IOException {
+        assertThat(commandInvoker.invoke("bus \"mokotowska 1\" 182")).isEqualTo("invoked");
     }
 
     @Test
