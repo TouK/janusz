@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BusCommandTest {
 
-    private final BusCommand command = JanuszStarter.createContext().getBean(BusCommand.class);
+    private final BusCommand command = new JanuszStarter("", "").createContext("").getBean(BusCommand.class);
 
     @Test
     public void shouldSearchRoutes() {

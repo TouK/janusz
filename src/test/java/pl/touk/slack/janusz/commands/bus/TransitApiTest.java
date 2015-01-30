@@ -1,4 +1,4 @@
-package pl.touk.slack.janusz.command.bus;
+package pl.touk.slack.janusz.commands.bus;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;

@@ -10,6 +10,7 @@ import pl.touk.slack.janusz.commands.JanuszCommand;
 import pl.touk.slack.janusz.commands.stack.StackOverflowCommand;
 import pl.touk.slack.janusz.commands.bus.BusCommand;
 import pl.touk.slack.janusz.commands.bus.TransitApi;
+import pl.touk.slack.janusz.commands.gif.GifCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class JanuszStarter {
     private final CommandInvoker commandInvoker;
 
     public static void main(String [] args) throws InterruptedException {
-        JanuszStarter januszStarter = new JanuszStarter(System.getProperty("apiToken"));
+        JanuszStarter januszStarter = new JanuszStarter(System.getProperty("apiToken"), System.getProperty("gifToken"));
         januszStarter.startListening();
 
         while (true) {
@@ -29,9 +30,9 @@ public class JanuszStarter {
         }
     }
 
-    public JanuszStarter(String apiToken) {
+    public JanuszStarter(String apiToken, String gifToken) {
         session = SlackSessionFactory.createWebSocketSlackSession(apiToken);
-        commandInvoker = new CommandInvoker(createCommands(createContext()));
+        commandInvoker = new CommandInvoker(createCommands(createContext(gifToken)));
     }
 
     private void startListening() {
@@ -53,11 +54,12 @@ public class JanuszStarter {
         session.connect();
     }
 
-    public static InjectionContext createContext() {
+    public InjectionContext createContext(String gifToken) {
         InjectionContext context = new DefaultInjectionContext();
         context.registerBean(new TransitApi());
         context.registerBean(new BusCommand());
         context.registerBean(new StackOverflowCommand());
+        context.registerBean(new GifCommand(gifToken));
         context.freeze();
         return context;
     }
@@ -66,6 +68,7 @@ public class JanuszStarter {
         return new HashMap<String, JanuszCommand>() {{
             put("bus", context.getBean(BusCommand.class));
             put("stack", context.getBean(StackOverflowCommand.class));
+            put("gif", context.getBean(GifCommand.class));
         }};
     }
 }
