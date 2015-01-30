@@ -3,12 +3,12 @@
 
 ## Supported commands
 
-- \`stack query - returns top StackOverflow answer for given question
+- \`stack query - returns top [StackOverflow](http://stackoverflow.com/) answer for given question
 ![stack](http://i.imgur.com/ORBQ8eL.png)
-- \`gif phrase - displays random animated gir from Giphy.com for given phrase
-![gif](http://i.imgur.com/XY5N10W.png)
-- \`bus start_location end_location - searches Google Directions Api for public transit route between given locations
-![bus](http://i.imgur.com/C7UvWwk.png)
+- \`gif phrase - displays random animated gif from [Giphy.com](http://giphy.com/) for given phrase
+![gif](http://i.imgur.com/bn7jWkb.png)
+- \`bus start_location end_location - searches [Google Directions Api](https://developers.google.com/maps/documentation/directions/) for public transport route between given locations
+![bus](http://i.imgur.com/ldnS8sg.png)
 
 # License
 Copyright © 2015 TouK
