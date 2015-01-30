@@ -14,13 +14,28 @@ public class CommandInvokerTest {
         put("bus", words -> "invoked");
     }});
 
+    private CommandInvoker commandInvoker = new CommandInvoker(commands);
+
     @Test
     public void shouldInvokeProperCommand() {
-        CommandInvoker commandInvoker = new CommandInvoker(commands);
-
         String response = commandInvoker.invoke("bus mokotowska1 182");
 
         assertThat(response).isEqualTo("invoked");
+    }
+
+    @Test
+    public void shouldRecognizeMessageAsCommand() {
+        assertThat(commandInvoker.isCommandPrefix("`bus test")).isTrue();
+    }
+
+    @Test
+    public void shouldNotRecognizeMessageAsCommand() {
+        assertThat(commandInvoker.isCommandPrefix("bus test")).isFalse();
+    }
+
+    @Test
+    public void shouldReturnUnknownCommand() {
+        assertThat(commandInvoker.invoke("`sdsds").contains("Unknown"));
     }
 
 }
