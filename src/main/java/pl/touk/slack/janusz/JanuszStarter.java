@@ -21,6 +21,8 @@ public class JanuszStarter {
 
     private final CommandInvoker commandInvoker;
 
+    private final JanuszWodzirej januszWodzirej;
+
     public static void main(String [] args) throws InterruptedException {
         JanuszStarter januszStarter = new JanuszStarter(System.getProperty("apiToken"), System.getProperty("gifToken"));
         januszStarter.startListening();
@@ -33,6 +35,7 @@ public class JanuszStarter {
     public JanuszStarter(String apiToken, String gifToken) {
         session = SlackSessionFactory.createWebSocketSlackSession(apiToken);
         commandInvoker = new CommandInvoker(createCommands(createContext(gifToken)));
+        januszWodzirej = new JanuszWodzirej();
     }
 
     private void startListening() {
@@ -43,15 +46,26 @@ public class JanuszStarter {
 
             @Override
             public void onMessage(SlackMessage slackMessage) {
-                if (commandInvoker.isCommandPrefix(slackMessage.getMessageContent())) {
-                    String messageWithoutCommandPrefix = slackMessage.getMessageContent().substring(1);
-                    session.sendMessageOverWebSocket(slackMessage.getChannel(), commandInvoker.invoke(messageWithoutCommandPrefix), null)
-                    ;
+
+                String message = getResponseMessage(slackMessage);
+                if (message != null) {
+                    session.sendMessageOverWebSocket(slackMessage.getChannel(), message, null);
                 }
             }
         });
 
         session.connect();
+    }
+
+    private String getResponseMessage(SlackMessage slackMessage) {
+        if (commandInvoker.isCommandPrefix(slackMessage.getMessageContent())) {
+            String messageWithoutCommandPrefix = slackMessage.getMessageContent().substring(1);
+            return commandInvoker.invoke(messageWithoutCommandPrefix);
+        } else if (januszWodzirej.canHandle(slackMessage)){
+            return januszWodzirej.talk(slackMessage);
+        }
+
+        return null;
     }
 
     public InjectionContext createContext(String gifToken) {
