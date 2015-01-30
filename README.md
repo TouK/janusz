@@ -1,6 +1,8 @@
 # janusz &trade;
 > Slack bot for simplifying developer life.
 
+Hackaton project. 
+
 ## Supported commands
 
 - \`stack query - returns top [StackOverflow](http://stackoverflow.com/) answer for given question
