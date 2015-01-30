@@ -7,7 +7,7 @@ import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import pl.touk.slack.janusz.commands.JanuszCommand;
-import pl.touk.slack.janusz.commands.StackOverflowCommand;
+import pl.touk.slack.janusz.commands.stack.StackOverflowCommand;
 import pl.touk.slack.janusz.commands.bus.BusCommand;
 import pl.touk.slack.janusz.commands.bus.TransitApi;
 

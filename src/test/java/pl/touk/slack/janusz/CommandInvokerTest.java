@@ -19,7 +19,7 @@ public class CommandInvokerTest {
 
     @Test
     public void shouldInvokeProperCommand() throws IOException {
-        assertThat(commandInvoker.invoke("bus \"mokotowska 1\" 182")).isEqualTo("invoked");
+        assertThat(commandInvoker.invoke("bus \"mokotowska 1\" 182")).isEqualTo("invoked with 2");
     }
 
     @Test

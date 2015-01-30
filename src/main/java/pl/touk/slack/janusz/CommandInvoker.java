@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVParser;
 import pl.touk.slack.janusz.commands.JanuszCommand;
 import pl.touk.slack.janusz.commands.unknown.UnknownCommand;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,12 +23,15 @@ public class CommandInvoker {
 
     public String invoke(String messageContent) {
         try {
-            String command = messageContent.substring(0, messageContent.indexOf(' '));
-            String args = messageContent.substring(messageContent.indexOf(' ') + 1);
+            String command = messageContent;
+            List<String> commandArgs = new ArrayList<>();
+            if (messageContent.contains(" ")) {
+                command = messageContent.substring(0, messageContent.indexOf(' '));
+                String args = messageContent.substring(messageContent.indexOf(' ') + 1);
 
-            CSVParser csvRecords = CSVParser.parse(args, CSVFormat.newFormat(' ').withQuote('"'));
-            List<String> commandArgs = Lists.newArrayList(csvRecords.iterator().next().iterator());
-
+                CSVParser csvRecords = CSVParser.parse(args, CSVFormat.newFormat(' ').withQuote('"'));
+                commandArgs = Lists.newArrayList(csvRecords.iterator().next().iterator());
+            }
             return commands.getOrDefault(command, unknownCommand).invoke(commandArgs);
         } catch (Exception ex) {
             throw new JanuszException(ex);

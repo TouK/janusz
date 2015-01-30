@@ -1,16 +1,16 @@
-package pl.touk.slack.janusz.commands;
+package pl.touk.slack.janusz.commands.stack;
 
+import com.google.common.base.Joiner;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
-import com.sun.deploy.util.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.touk.slack.janusz.commands.JanuszCommand;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class StackOverflowCommand implements JanuszCommand {
@@ -22,7 +22,7 @@ public class StackOverflowCommand implements JanuszCommand {
     Logger log = LoggerFactory.getLogger(StackOverflowCommand.class);
 
     @Override
-    public String invoke(String[] words) {
+    public String invoke(List<String> words) {
         String question = buildQuestion(words);
 
         if (isQuestionEmpty(question)) {
@@ -36,18 +36,14 @@ public class StackOverflowCommand implements JanuszCommand {
         }
 
         return ERROR_MESSAGE;
-
-
     }
 
     private boolean isQuestionEmpty(String question) {
         return question == null || "".equals(question);
     }
 
-    private String buildQuestion(String[] words) {
-        List<String> paramsWithCommand = Arrays.asList(words);
-        List<String> params = paramsWithCommand.subList(1, paramsWithCommand.size());
-        return StringUtils.join(params, " ");
+    private String buildQuestion(List<String> params) {
+        return Joiner.on(",").join(params);
     }
 
     private String askStackOverflow(String question) throws UnirestException {
