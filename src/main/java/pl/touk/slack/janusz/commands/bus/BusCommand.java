@@ -20,7 +20,7 @@ public class BusCommand implements JanuszCommand {
             return directions.stream().map(route ->
                     "busiki: " + route.getSteps().stream()
                                     .map(step -> step.getLine() + " (" + step.getDeparture() + ")")
-                                    .collect(Collectors.joining(", "))
+                                    .collect(Collectors.joining(" -> "))
                     + ", czas: " + route.getDuration()
             ).collect(Collectors.joining(","));
         } catch (UnirestException e) {
