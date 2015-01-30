@@ -5,6 +5,7 @@ import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import pl.touk.slack.janusz.commands.JanuszCommand;
+import pl.touk.slack.janusz.commands.StackOverflowCommand;
 import pl.touk.slack.janusz.commands.bus.BusCommand;
 
 import java.util.HashMap;
@@ -16,13 +17,14 @@ public class JanuszStarter {
 
     private Map<String, JanuszCommand> commands = new HashMap<String, JanuszCommand>() {{
         put("bus", new BusCommand());
+        put("stack", new StackOverflowCommand());
     }};
 
     private CommandInvoker commandInvoker = new CommandInvoker(commands);
 
     public static void main(String [] args) throws InterruptedException {
         JanuszStarter januszStarter = new JanuszStarter(
-            System.getProperty("apiToken", "xoxb-3564096395-GwPNb0nqUQGUEAyxQQ3wZSWW")
+            System.getProperty("apiToken", "xoxb-3564096395-Z1ZRglpJIIyIAFX6DNRqvb5o")
         );
         januszStarter.startListening();
 
