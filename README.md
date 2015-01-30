@@ -1,5 +1,5 @@
 # janusz &trade;
-> Slack bot for simplifying your developer life.
+> Slack bot for simplifying developer life.
 
 ## Supported commands
 
