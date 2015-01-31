@@ -12,12 +12,15 @@ repositories {
 apply plugin: 'java'
 apply plugin: 'idea'
 
-group = 'pl.touk.slack'
+group = 'pl.touk.chat.bot'
 version = '0.0.1-SNAPSHOT'
 
 sourceCompatibility = '1.8'
 
 dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.0'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.0'
+    compile 'com.ep.hippyjava:HippyJava:1.0.0-SNAPSHOT'
     compile 'com.google.guava:guava:18.0'
     compile 'com.truward.di:micro-di:1.0.11'
     compile 'org.slf4j:slf4j-simple:1.7.7'
