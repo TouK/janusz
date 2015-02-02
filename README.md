@@ -3,6 +3,8 @@
 
 Hackaton project. 
 
+![build](https://img.shields.io/circleci/project/TouK/janusz.svg?style=flat)
+
 ## Supported commands
 
 - \`stack query - returns top [StackOverflow](http://stackoverflow.com/) answer for given question
