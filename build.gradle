@@ -13,11 +13,14 @@ repositories {
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'application'
 
 group = 'pl.touk.chat.bot'
 version = '0.0.1-SNAPSHOT'
 
 sourceCompatibility = '1.8'
+
+mainClassName = 'pl.touk.chat.bot.janusz.JanuszStarter'
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.0'
