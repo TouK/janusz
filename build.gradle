@@ -36,6 +36,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.5.0'
     compile 'org.apache.commons:commons-csv:1.1'
     compile 'com.google.guava:guava:18.0'
+    compile 'org.jooq:jooq:3.5.2'
+    compile 'com.h2database:h2:1.4.185'
 
     testCompile 'org.jmockit:jmockit:1.12'
     testCompile 'org.assertj:assertj-core:1.7.0'
