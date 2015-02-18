@@ -44,7 +44,7 @@ public class StackOverflowCommand implements JanuszCommand {
     }
 
     private String buildQuestion(List<String> params) {
-        return Joiner.on(",").join(params);
+        return Joiner.on(" ").join(params);
     }
 
     private String askStackOverflow(String question) throws UnirestException {
@@ -59,8 +59,9 @@ public class StackOverflowCommand implements JanuszCommand {
 
     private String retriveFromStack(String question) throws UnirestException {
         HttpRequest request = Unirest.get(STACK_API_PATH)
-                .queryString("q", question)
-                .queryString("site", "stackoverflow");
+                .queryString("q", "\"" + question + "\"")
+                .queryString("site", "stackoverflow")
+                .queryString("sort", "relevance");
 
         log.info("Asking for {}", question);
         HttpResponse<JsonNode> stackResponse = request.asJson();
