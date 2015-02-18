@@ -6,5 +6,6 @@ public class JanuszConfiguration {
     public Slack slack;
     public Giphy giphy = new Giphy();
     public String nickname = "Janusz";
+    public Jdbc jdbc;
 
 }

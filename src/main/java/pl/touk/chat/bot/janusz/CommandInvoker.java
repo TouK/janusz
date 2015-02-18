@@ -3,42 +3,50 @@ package pl.touk.chat.bot.janusz;
 import com.google.common.collect.Lists;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import pl.touk.chat.bot.janusz.commands.JanuszCommand;
-import pl.touk.chat.bot.janusz.commands.unknown.UnknownCommand;
+import pl.touk.chat.bot.janusz.commands.Commands;
+import pl.touk.chat.bot.janusz.store.Store;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static org.apache.commons.lang3.StringUtils.substringBefore;
 
 public class CommandInvoker {
 
-    private final Map<String, JanuszCommand> commands;
-    private final UnknownCommand unknownCommand = new UnknownCommand();
+    private final Commands commands;
+    private final Store store;
 
     private static final String COMMAND_PREFIX = "`";
 
-    public CommandInvoker(Map<String, JanuszCommand> commands) {
+    public CommandInvoker(Commands commands, Store store) {
         this.commands = commands;
+        this.store = store;
     }
 
-    public String invoke(String messageContent) {
+    public String invoke(String sender, String messageContent) {
         try {
             String command = messageContent;
             List<String> commandArgs = new ArrayList<>();
             if (messageContent.contains(" ")) {
-                command = messageContent.substring(0, messageContent.indexOf(' '));
-                String args = messageContent.substring(messageContent.indexOf(' ') + 1);
+                command = substringBefore(messageContent, " ");
+                String args = substringAfter(messageContent, " ");
 
                 CSVParser csvRecords = CSVParser.parse(args, CSVFormat.newFormat(' ').withQuote('"'));
                 commandArgs = Lists.newArrayList(csvRecords.iterator().next().iterator());
+
+                commandArgs = commandArgs.stream()
+                        .map((arg) -> arg.startsWith("$") ? store.get(sender, substringAfter(arg, "$"), String.class) : arg)
+                        .collect(Collectors.toList());
             }
-            return commands.getOrDefault(command, unknownCommand).invoke(commandArgs);
+            return commands.get(command).invoke(sender, commandArgs);
         } catch (Exception ex) {
             throw new JanuszException(ex);
         }
     }
 
-    public boolean isCommandPrefix(String messageContent) {
+    public boolean isCommand(String messageContent) {
         return messageContent.startsWith(COMMAND_PREFIX);
     }
 }

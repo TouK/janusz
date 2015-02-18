@@ -8,7 +8,7 @@ public class StackOverflowCommandTest {
     @Test
     public void asksStack() {
         StackOverflowCommand command = new StackOverflowCommand();
-        String invoke = command.invoke(ImmutableList.of("java"));
+        command.invoke("sender", ImmutableList.of("java"));
     }
 
 }

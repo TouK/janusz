@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface JanuszCommand {
 
-    String invoke(List<String> words);
+    String invoke(String sender, List<String> args);
 }

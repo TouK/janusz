@@ -7,10 +7,10 @@ public class JanuszCommander {
     @Resource
     private CommandInvoker commandInvoker;
 
-    public void processCommand(String message, Responder responder) {
-        if (commandInvoker.isCommandPrefix(message)) {
+    public void processCommand(String message, String sender, Responder responder) {
+        if (commandInvoker.isCommand(message)) {
             String messageWithoutCommandPrefix = message.substring(1);
-            responder.response(commandInvoker.invoke(messageWithoutCommandPrefix));
+            responder.respond(commandInvoker.invoke(sender, messageWithoutCommandPrefix));
         }
     }
 

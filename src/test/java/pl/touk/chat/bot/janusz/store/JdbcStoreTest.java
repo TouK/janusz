@@ -21,8 +21,17 @@ public class JdbcStoreTest {
     public void shouldStoreAndRetrieveValue() {
         jdbcStore.put("user", "key", "value");
         jdbcStore.put("user", "int", 1);
+
         assertThat(jdbcStore.get("user", "key", String.class)).isEqualTo("value");
         assertThat(jdbcStore.get("user", "int", Integer.class)).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldUpdateValue() {
+        jdbcStore.put("user", "key", "value");
+        jdbcStore.put("user", "key", "value2");
+
+        assertThat(jdbcStore.get("user", "key", String.class)).isEqualTo("value2");
     }
 
 }

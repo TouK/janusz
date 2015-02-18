@@ -1,23 +1,25 @@
 package pl.touk.chat.bot.janusz;
 
+import com.google.common.collect.ImmutableMap;
 import com.truward.di.InjectionContext;
 import com.truward.di.support.DefaultInjectionContext;
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.chat.bot.janusz.commands.JanuszCommand;
+import pl.touk.chat.bot.janusz.commands.Commands;
 import pl.touk.chat.bot.janusz.commands.bus.BusCommand;
 import pl.touk.chat.bot.janusz.commands.bus.TransitApi;
 import pl.touk.chat.bot.janusz.commands.gif.GifCommand;
 import pl.touk.chat.bot.janusz.commands.stack.StackOverflowCommand;
+import pl.touk.chat.bot.janusz.commands.store.StoreCommand;
 import pl.touk.chat.bot.janusz.config.ConfigLoader;
 import pl.touk.chat.bot.janusz.config.JanuszConfiguration;
 import pl.touk.chat.bot.janusz.hipchat.HippyJanusz;
 import pl.touk.chat.bot.janusz.slack.SlackJanusz;
+import pl.touk.chat.bot.janusz.store.JdbcStore;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JanuszStarter {
 
@@ -51,25 +53,33 @@ public class JanuszStarter {
     public InjectionContext createContext(JanuszConfiguration januszConfiguration) {
         InjectionContext context = new DefaultInjectionContext();
         context.registerBean(januszConfiguration);
-        context.registerBean(new TransitApi());
+        context.registerBean(connectionPool(januszConfiguration));
+        context.registerBean(JdbcStore.class);
+        context.registerBean(TransitApi.class);
         context.registerBean(BusCommand.class);
-        context.registerBean(new StackOverflowCommand());
-        context.registerBean(new GifCommand(januszConfiguration.giphy.apiToken));
+        context.registerBean(StoreCommand.class);
+        context.registerBean(StackOverflowCommand.class);
+        context.registerBean(GifCommand.class);
+        context.registerBean(createCommands(context));
 
-        context.registerBean(new CommandInvoker(createCommands(context)));
-        context.registerBean(new JanuszCommander());
-        context.registerBean(new SlackJanusz());
-        context.registerBean(new HippyJanusz());
+        context.registerBean(CommandInvoker.class);
+        context.registerBean(JanuszCommander.class);
+        context.registerBean(SlackJanusz.class);
+        context.registerBean(HippyJanusz.class);
 
         context.freeze();
         return context;
     }
 
-    private Map<String, JanuszCommand> createCommands(InjectionContext context) {
-        return new HashMap<String, JanuszCommand>() {{
-            put("bus", context.getBean(BusCommand.class));
-            put("stack", context.getBean(StackOverflowCommand.class));
-            put("gif", context.getBean(GifCommand.class));
-        }};
+    private JdbcConnectionPool connectionPool(JanuszConfiguration configuration) {
+        return JdbcConnectionPool.create(configuration.jdbc.url, configuration.jdbc.username, configuration.jdbc.password);
+    }
+
+    private Commands createCommands(InjectionContext context) {
+        return new Commands(ImmutableMap.of(
+                "bus", context.getBean(BusCommand.class),
+                "stack", context.getBean(StackOverflowCommand.class),
+                "gif", context.getBean(GifCommand.class),
+                "store", context.getBean(StoreCommand.class)));
     }
 }

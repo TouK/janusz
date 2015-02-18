@@ -26,10 +26,18 @@ public class JdbcStore implements Store {
 
     @Override
     public <T> void put(String user, String key, T value) {
-        create.insertInto(STORE)
-                .set(USER, user)
-                .set(KEY, key)
-                .set(VALUE, value).execute();
+        if (exists(user, key)) {
+            create.update(STORE)
+                    .set(VALUE, value)
+                    .where(USER.equal(user)
+                        .and(KEY.equal(key)))
+                    .execute();
+        } else {
+            create.insertInto(STORE)
+                    .set(USER, user)
+                    .set(KEY, key)
+                    .set(VALUE, value).execute();
+        }
     }
 
     @Override
@@ -39,5 +47,9 @@ public class JdbcStore implements Store {
                 .where(USER.equal(user)
                         .and(KEY.equal(key)))
                 .fetchOne(VALUE, clazz);
+    }
+
+    private boolean exists(String user, String key) {
+        return get(user, key, String.class) != null;
     }
 }

@@ -7,8 +7,8 @@ import java.util.List;
 public class UnknownCommand implements JanuszCommand {
 
     @Override
-    public String invoke(List<String> words) {
-        boolean isJanusz = words.stream().anyMatch((input) -> input.toLowerCase().equals("janusz"));
+    public String invoke(String sender, List<String> args) {
+        boolean isJanusz = args.stream().anyMatch((input) -> input.toLowerCase().equals("janusz"));
 
         if (isJanusz) {
             return "No siema, co tam?";

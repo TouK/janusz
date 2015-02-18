@@ -28,8 +28,8 @@ public class HippyJanusz extends HippyBot implements JanuszListener {
     }
 
     @Override
-    public void receiveMessage(String message, String from, Room room) {
-        januszCommander.processCommand(message, result -> room.sendMessage(result, nickname()));
+    public void receiveMessage(String message, String sender, Room room) {
+        januszCommander.processCommand(message, sender, result -> room.sendMessage(result, nickname()));
     }
 
     @Override

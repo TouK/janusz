@@ -1,1 +1,1 @@
-create table STORE (USER varchar(50), KEY varchar(50), VALUE varchar(50));
+create table if not exists STORE (USER varchar(50), KEY varchar(50), VALUE varchar(50));

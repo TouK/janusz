@@ -16,7 +16,7 @@ public class BusCommand implements JanuszCommand {
     }
 
     @Override
-    public String invoke(List<String> args) {
+    public String invoke(String sender, List<String> args) {
         try {
             List<Route> directions = transitApi.getDirections(args.get(0), args.get(1));
             return directions.stream().map(route ->

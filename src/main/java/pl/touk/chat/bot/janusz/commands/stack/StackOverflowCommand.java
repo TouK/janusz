@@ -23,8 +23,8 @@ public class StackOverflowCommand implements JanuszCommand {
     Logger log = LoggerFactory.getLogger(StackOverflowCommand.class);
 
     @Override
-    public String invoke(List<String> words) {
-        String question = buildQuestion(words);
+    public String invoke(String sender, List<String> args) {
+        String question = buildQuestion(args);
 
         if (isQuestionEmpty(question)) {
             return HELP_MESSAGE;

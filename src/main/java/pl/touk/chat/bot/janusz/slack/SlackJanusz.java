@@ -33,6 +33,7 @@ public class SlackJanusz implements JanuszListener {
             public void onMessage(SlackMessage slackMessage) {
                 janusz.processCommand(
                     slackMessage.getMessageContent(),
+                    slackMessage.getSender().getUserName(),
                     result -> session.sendMessageOverWebSocket(slackMessage.getChannel(), result, null)
                 );
             }
