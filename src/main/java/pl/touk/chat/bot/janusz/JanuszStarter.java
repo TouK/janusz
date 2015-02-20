@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import pl.touk.chat.bot.janusz.commands.Commands;
 import pl.touk.chat.bot.janusz.commands.bus.BusCommand;
 import pl.touk.chat.bot.janusz.commands.bus.TransitApi;
+import pl.touk.chat.bot.janusz.commands.cmdfucommand.CMDFuCommand;
 import pl.touk.chat.bot.janusz.commands.gif.GifCommand;
 import pl.touk.chat.bot.janusz.commands.stack.StackOverflowCommand;
 import pl.touk.chat.bot.janusz.commands.store.StoreCommand;
@@ -60,12 +61,14 @@ public class JanuszStarter {
         context.registerBean(StoreCommand.class);
         context.registerBean(StackOverflowCommand.class);
         context.registerBean(GifCommand.class);
+        context.registerBean(CMDFuCommand.class);
         context.registerBean(createCommands(context));
 
         context.registerBean(CommandInvoker.class);
         context.registerBean(JanuszCommander.class);
         context.registerBean(SlackJanusz.class);
         context.registerBean(HippyJanusz.class);
+
 
         context.freeze();
         return context;
@@ -80,6 +83,7 @@ public class JanuszStarter {
                 "bus", context.getBean(BusCommand.class),
                 "stack", context.getBean(StackOverflowCommand.class),
                 "gif", context.getBean(GifCommand.class),
+                "cmdfu", context.getBean(CMDFuCommand.class),
                 "store", context.getBean(StoreCommand.class)));
     }
 }
